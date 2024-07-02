@@ -1,0 +1,21 @@
+<html>
+    <head>
+        <title>gameserver_home</title>
+    </head>
+    <body>
+        <h1>GameServer Demo</h1>
+        <h2>Rooms</h2>
+        <ul>
+            <% for (let id in rooms) {%>
+                <li><%= id %>: <%= JSON.stringify(rooms[id]) %></li>
+            <%}%>
+            
+        </ul>
+        <form method="post" action="/room">
+            id: <input type="text" name="id" /> <br>
+            uid: <input type="text" name="uid" /> <br>
+            data: <input type="text" name="data" /> <br>
+            <input type="submit">
+        </form>
+    </body>
+</html>

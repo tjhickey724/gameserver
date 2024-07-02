@@ -21,8 +21,8 @@ mongoose.connect(
   {useNewUrlParser: true, useUnifiedTopology: true});
 const Room = 
     mongoose.model('Room', 
-      { room_id: String,
-        user_id: String,
+      { id: String,
+        uid: String,
         data: mongoose.Schema.Types.Mixed, 
       }
 );
@@ -46,48 +46,67 @@ app.get("/", (req,res,next) => {
   res.json("Game Server v1.0: "+Date());
 })
 
+app.get("/home",(req,res, next) => {
+  res.render('homepage')
+})
+
 app.get('/debug',
   async (req,res,next) => {
     const rooms = await Room.find({});
     console.log('in debug');
-    res.json(rooms);
+    res.locals.rooms = rooms
+    res.render('showrooms');
+    //res.json(rooms);
   }
 );
 
 app.get("/room", 
   async (req,res,next) => {
-    const room_id = req.query.room_id;
-    const rooms = await Room.find({room_id});
+    const id = req.query.id;
+    const rooms = await Room.find({id});
     res.json(rooms);
 })
 
 app.get("/add_to_room", 
   async (req,res,next) => {
-    const room_id = req.query.room_id;
-    const user_id = req.query.user_id;
+    const id = req.query.id;
+    const uid = req.query.uid;
     const data = req.query.data;
-    let room = new Room({room_id,user_id,data});
-    await room.save();
-    res.json(room);
+    console.dir({id,uid,data});
+    if (!(id && uid && data)) {
+      res.json(["invalid data",{id,uid,data}])
+    } else {
+      let room = new Room({id,uid,data});
+      await Room.deleteMany({id,uid})
+      await room.save();
+      res.json(room);
+    }
 
 })
 
 app.get("/clear_room",
   async (req,res,next) => {
-    const room_id = req.query.room_id;
-    const rooms = await Room.deleteMany({room_id});
+    const id = req.query.id;
+    const rooms = await Room.deleteMany({id});
     res.json(rooms);
   }
 );
 
+
 app.post("/room", 
   async (req,res,next) => { 
-    const room_id = req.body.room_id;
-    const user_id = req.body.user_id; 
+    const id = req.body.id;
+    const uid = req.body.uid; 
     const data = req.body.data; 
-    let room = new Room({room_id,user_id,data});
+
+    if (!(id && uid && data)) {
+      res.json(["invalid data",{id,uid,data}])
+    } else {
+      let room = new Room({id,uid,data});
+      await Room.deleteMany({id,uid})
       await room.save();
-    res.json(room);
+      res.json(room);
+    }
 });
 
 
