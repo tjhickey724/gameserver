@@ -19,6 +19,9 @@ console.log(`MONGODB_URI: ${process.env.MONGODB_URI}`);
 mongoose.connect(
   process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/gameserver', 
   {useNewUrlParser: true, useUnifiedTopology: true});
+
+// mongodb+srv://cs153a:<password>@cluster0.kgugl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+
 const Room = 
     mongoose.model('Room', 
       { id: String,
