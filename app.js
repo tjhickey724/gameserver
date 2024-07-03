@@ -2,6 +2,7 @@
 gameserver
 This is a minimal app to allow phone apps to communicate with each other with persistent data.
 The goal of this app was to build the simplest possible app that would meet that goal.
+This demo uses a mongo database to store data.
 */
 
 const createError = require('http-errors');
